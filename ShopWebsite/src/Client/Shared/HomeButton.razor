@@ -1,0 +1,22 @@
+﻿@inject NavigationManager _navigationManager
+
+<button @onclick="HomeReturn"
+    class="btn btn-outline-primary home-button">
+    My Shop
+</button>
+@* 
+<header id="header" class="header fixed-top d-flex align-items-center pe-4">
+    <div class="d-flex align-items-center justify-content-between">
+        <a @onclick="HomeReturn" class="logo d-flex align-items-center">
+            <img src="~/Admin/assets/img/folder.png" alt="Admin Panel">
+            <span class="d-none d-lg-block">MusicStore</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+</header> *@
+@code {
+    private void HomeReturn()
+    {
+        _navigationManager.NavigateTo("");
+    }
+}

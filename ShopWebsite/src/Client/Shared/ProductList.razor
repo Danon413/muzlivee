@@ -1,0 +1,65 @@
+﻿@inject IProductService _productService
+@implements IDisposable
+
+@if (_productService.Products == null || _productService.Products.Count == 0)
+{
+    <span>@_productService.Message</span>
+}
+else
+{
+    <div class="row row-col-sm-4">
+        @foreach (var product in _productService.Products)
+        {
+            <div class="col mb-4 ml-4">
+                <div class="card h-100">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Title">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Title</h5>
+                        <p class="card-text">@product.Description</p>
+                        <h6 class="card-price">@GetPriceText(product)</h6>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/product/@product.Id" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @for (var i = 1; i <= _productService.PageCount; i++)
+            {
+                <li class="page-item @(i == _productService.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="/search/@_productService.LastSearchText/@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        _productService.ProductsChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        _productService.ProductsChanged -= StateHasChanged;
+    }
+
+    private string GetPriceText(Product product)
+    {
+        var variants = product.Variants;
+        if (variants.Count == 0)
+        {
+            return string.Empty;
+        }
+        else if (variants.Count == 1)
+        {
+            return $"${variants[0].Price}";
+        }
+        decimal minPrice = variants.Min(v => v.Price);
+        return $"Starting at ${minPrice}";
+    }
+}
