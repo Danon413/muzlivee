@@ -8,6 +8,8 @@
         Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword);
         int GetUserId();
         string GetUserEmail();
+        Task<string> GetUserFullNameAsync(int id);
         Task<User> GetUserByEmail(string email);
+        Task<string> GetUserAddress(int id);
     }
 }

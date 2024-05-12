@@ -27,7 +27,7 @@ namespace ShopWebsite.Server.Services.PaymentService
                 PriceData = new SessionLineItemPriceDataOptions
                 {
                     UnitAmountDecimal = product.Price * 100,
-                    Currency = "usd",
+                    Currency = "eur",
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
                         Name = product.Title,
@@ -40,11 +40,12 @@ namespace ShopWebsite.Server.Services.PaymentService
             var options = new SessionCreateOptions
             {
                 CustomerEmail = _authService.GetUserEmail(),
-                ShippingAddressCollection = 
-                    new SessionShippingAddressCollectionOptions
-                        {
-                            AllowedCountries = new List<string>() { "LV" }
-                        },
+                
+                ShippingAddressCollection =
+                new SessionShippingAddressCollectionOptions
+                {
+                    AllowedCountries = new List<string>() { "LV" }
+                },
                 ShippingOptions = new List<SessionShippingOptionOptions>
                 {
                     new SessionShippingOptionOptions
@@ -55,7 +56,7 @@ namespace ShopWebsite.Server.Services.PaymentService
                             FixedAmount = new SessionShippingOptionShippingRateDataFixedAmountOptions
                             {
                                 Amount = 0,
-                                Currency = "usd",
+                                Currency = "eur",
                             },
                             DisplayName = "Free shipping",
                             DeliveryEstimate = new SessionShippingOptionShippingRateDataDeliveryEstimateOptions
@@ -74,7 +75,6 @@ namespace ShopWebsite.Server.Services.PaymentService
                         },
                     },
                 },
-                
                 PaymentMethodTypes = new List<string>
                 {
                     "card"

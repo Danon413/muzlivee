@@ -1,4 +1,6 @@
 ﻿
+using ShopWebsite.Server.Services.EmailService;
+
 namespace ShopWebsite.Server.Utils.ServiceRegistration
 {
     public static class ServiceCollectionEx
@@ -16,6 +18,7 @@ namespace ShopWebsite.Server.Utils.ServiceRegistration
                 .AddScoped<IOrderService, OrderService>()
                 .AddScoped<IPaymentService, PaymentService>()
                 .AddScoped<IAddressService, AddressService>()
-                .AddScoped<IProductTypeService, ProductTypeService>();
+                .AddScoped<IProductTypeService, ProductTypeService>()
+                .AddScoped<IEmailService, EmailService>();
     }
 }

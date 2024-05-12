@@ -18,19 +18,49 @@ namespace ShopWebsite.Server.Services.AuthService
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
-        public int GetUserId()
+        public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+
+        public async Task<string> GetUserFullNameAsync(int id)
         {
-            var context = _httpContextAccessor.HttpContext;
-            return int.Parse(context.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            string fullName;
+            var query = from users in _context.Users
+                        join addresses in _context.Addresses on users.Id equals addresses.UserId
+                        where addresses.UserId == id
+                        select new { addresses, users };
+
+            var address = await query.FirstOrDefaultAsync();
+
+            if (address != null)
+                fullName = address.addresses.FirstName + " " + address.addresses.LastName;
+            else
+                fullName = await _context.Users.Where(x => x.Id == id).Select(x => x.Email).FirstOrDefaultAsync(); 
+
+            return fullName;
         }
-        public string GetUserEmail()
+
+        public async Task<string> GetUserAddress(int id)
         {
-            var context = _httpContextAccessor.HttpContext;
-            return context.User.FindFirstValue(ClaimTypes.Name);
+            string add; 
+            var query = from users in _context.Users
+                        join addresses in _context.Addresses on users.Id equals addresses.UserId
+                        where addresses.UserId == id
+                        select new { addresses };
+
+            var address = await query.FirstOrDefaultAsync();
+
+            if (address != null)
+                add = address.addresses.Country + " " + address.addresses.City + " " + address.addresses.Street;
+            else
+                add = " NOT FOUND ";
+
+            return add;
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
+
             var response = new ServiceResponse<string>();
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));

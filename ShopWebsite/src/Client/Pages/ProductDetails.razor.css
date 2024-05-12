@@ -1,8 +1,8 @@
 ﻿.media-img {
-    max-height: 500px;
-    max-width: 500px;
+    max-height: 300px;
+    max-width: 400px;
     border-radius: 6px;
-    margin: 0 10px 10px 10px;
+    margin: 10px 30px 10px 30px;
 }
 
 .media-img-wrapper {

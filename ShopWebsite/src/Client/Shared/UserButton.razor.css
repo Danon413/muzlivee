@@ -13,3 +13,9 @@
 .dropdown-item:hover {
     background-color: white;
 }
+
+.dropdown-menu {
+    padding: 10px 0px 10px 0px !important;
+    width: 90px !important;
+    min-width: 80px !important;
+}

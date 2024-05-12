@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using ShopWebsite.Server.Services.EmailService;
+using System.Security.Claims;
 
 namespace ShopWebsite.Server.Services.OrderService
 {
@@ -7,12 +8,13 @@ namespace ShopWebsite.Server.Services.OrderService
         private readonly DataContext _context;
         private readonly ICartService _cartService;
         private readonly IAuthService _authService;
-
-        public OrderService(DataContext context, ICartService cartService, IAuthService authService)
+        private readonly IEmailService _emailService;
+        public OrderService(DataContext context, ICartService cartService, IAuthService authService, IEmailService emailService)
         {
             _context = context;
             _cartService = cartService;
             _authService = authService;
+            _emailService = emailService;
         }
 
         public async Task<ServiceResponse<OrderDetailsResponse>> GetOrderDetails(int orderId)
@@ -77,10 +79,11 @@ namespace ShopWebsite.Server.Services.OrderService
                     $"{o.OrderItems.First().Product.Title} and" +
                     $" {o.OrderItems.Count - 1} more..." :
                     o.OrderItems.First().Product.Title,
-                ProductImageUrl = o.OrderItems.First().Product.ImageUrl,
+                ProductImageUrl = o.OrderItems.First().Product.ImageUrl
             }));
 
             response.Data = orderResponse;
+
             return response;
         }
 
@@ -113,11 +116,15 @@ namespace ShopWebsite.Server.Services.OrderService
                 .Where(ci => ci.UserId == userId));
 
             await _context.SaveChangesAsync();
+            var emailTo = await _context
+                .Users
+                .Where(x => x.Id == userId)
+                .Select(x => x.Email)
+                .FirstOrDefaultAsync();
 
-            return new ServiceResponse<bool>
-            {
-                Data = true
-            };
+            await _emailService.SendEmailAsync(emailTo, orderItems, order);
+
+            return new ServiceResponse<bool> { Data = true };
         }
     }
 }

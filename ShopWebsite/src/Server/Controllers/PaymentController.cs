@@ -8,7 +8,7 @@ namespace ShopWebsite.Server.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private IPaymentService _paymentService;
+        private readonly IPaymentService _paymentService;
         public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;

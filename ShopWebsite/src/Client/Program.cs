@@ -11,9 +11,9 @@ global using ShopWebsite.Client.Services.ProductTypeService;
 global using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using ShopWebsite.Client;
 using ShopWebsite.Client.Utils.ServiceRegistration;
 using Blazored.LocalStorage;
+using ShopWebsite.Client;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -24,5 +24,6 @@ builder.Services.AddShopWebsiteServices();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 await builder.Build().RunAsync();

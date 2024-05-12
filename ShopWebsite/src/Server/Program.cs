@@ -61,6 +61,7 @@ else
 
 app.UseSwagger();
 
+
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
