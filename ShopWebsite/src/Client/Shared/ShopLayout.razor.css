@@ -1,6 +1,9 @@
 main {
     flex: 1;
+    background-color: #F4F3F2 !important;
 }
+
+
 
 .nav-menu {
     background: black;

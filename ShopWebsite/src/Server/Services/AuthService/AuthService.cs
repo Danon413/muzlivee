@@ -51,9 +51,9 @@ namespace ShopWebsite.Server.Services.AuthService
             var address = await query.FirstOrDefaultAsync();
 
             if (address != null)
-                add = address.addresses.Country + " " + address.addresses.City + " " + address.addresses.Street;
+                add = address.addresses.Country + ", " + address.addresses.City + ", " + address.addresses.Street;
             else
-                add = " NOT FOUND ";
+                add = " - ";
 
             return add;
         }

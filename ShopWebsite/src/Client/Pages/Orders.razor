@@ -1,5 +1,6 @@
 ﻿@page "/orders"
 @inject IOrderService _orderService
+@inject IJSRuntime _js
 
 <h3>Orders</h3>
 
@@ -13,6 +14,9 @@ else if (orders.Count <= 0)
 }
 else
 {
+    <button @onclick="DownloadExcelFile" class="btn btn-primary order-btn">Export in Excel</button>
+    <button class="btn btn-primary order-btn" style="margin-top: 20px;">Export in PDF</button>
+
     foreach (var order in orders)
     {
         <div class="container">
@@ -24,16 +28,50 @@ else
                 <span>@order.OrderDate</span>
                 <a href="orders/@order.Id">Show more...</a>
             </div>
-            <div class="order-price">$@order.TotalPrice</div>
+            <div class="order-price">€@order.TotalPrice</div>
         </div> 
     }
 }
 
+<script>
+
+    function saveAsFile(filename, bytesBase64) {
+        var link = document.createElement('a');
+        link.download = filename;
+        link.href = "data:application/octet-stream;base64," + bytesBase64;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+</script>
+
 @code {
+    // private bool showUserMenu = false;
+
     List<OrderOverviewResponse> orders = null;
+
+    // private string UserMenuCssClass => showUserMenu ? "show-menu" : null;
+
+    // private void ToggleUserMenu()
+    // {
+    //     showUserMenu = !showUserMenu;
+    // }
+
+    // private async Task HideUserMenu()
+    // {
+    //     await Task.Delay(200);
+    //     showUserMenu = false;
+    // }
 
     protected override async Task OnInitializedAsync()
     {
         orders = await _orderService.GetOrders();
+    }
+
+    private async Task DownloadExcelFile()
+    {
+        var excelBytes = ExcelService.GenerateExcelWorkbook(orders);
+        await _js.InvokeVoidAsync("saveAsFile", $"Orders_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(excelBytes));
     }
 }
