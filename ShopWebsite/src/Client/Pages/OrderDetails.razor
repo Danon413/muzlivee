@@ -1,5 +1,7 @@
 ﻿@page "/orders/{orderId:int}"
 @inject IOrderService _orderService
+@inject IJSRuntime _js
+
 
 @if (order == null)
 {
@@ -8,6 +10,8 @@
 else
 {
     <h3>Order from @order.OrderDate</h3>
+
+    <button @onclick="DownloadExcelFile" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Export in Excel</button>
 
     <div>
         @foreach (var product in order.Products)
@@ -30,14 +34,34 @@ else
     </div>
 }
 
+<script>
+
+    function saveAsFile(filename, bytesBase64) {
+        var link = document.createElement('a');
+        link.download = filename;
+        link.href = "data:application/octet-stream;base64," + bytesBase64;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+</script>
+
 @code {
     [Parameter]
     public int OrderId { get; set; }
+
 
     OrderDetailsResponse order = null;
 
     protected override async Task OnInitializedAsync()
     {
         order = await _orderService.GetOrderDetails(OrderId);
+    }
+
+    private async Task DownloadExcelFile()
+    {
+        var excelBytes = ExcelService.GenerateExcelWorkbook(order);
+        await _js.InvokeVoidAsync("saveAsFile", $"Order_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(excelBytes));
     }
 }
