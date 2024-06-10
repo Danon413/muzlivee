@@ -1,23 +1,32 @@
 ﻿.card {
-    border-radius: 10px;
-    border: 1px solid #dee2e6;
-    width: 200px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    transition: all 0.3s ease;
 }
 
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
 .card-img-top {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    align-self: center;
-    height: 220px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    height: 200px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
 }
 
 .card-title {
     font-size: 1.25rem;
     font-weight: bold;
+    color: #333333;
 }
 
 .card-text {
-    color: #6c757d;
+    color: #666666;
 }
 
 .card-price {
@@ -29,33 +38,11 @@
     margin-top: 20px;
 }
 
-.row-product {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 0;
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: calc(var(--bs-gutter-y) * -1);
-    margin-right: calc(var(--bs-gutter-x) * -.5);
-    margin-left: calc(var(--bs-gutter-x) * -.5);
+.page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
-@media (min-width: 992px) {
-    .row-cols-lg-3 > * {
-        flex: 0 0 auto;
-        width: 18.3333333333%;
-    }
-}
-
-.row {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 0;
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 0 !important;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-}
-
-.ml-4 {
-    margin-left: 20px;
+.page-link {
+    color: #007bff;
 }

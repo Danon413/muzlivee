@@ -1,4 +1,5 @@
 ﻿@page "/orders"
+@using ShopWebsite.Client.Utils
 @inject IOrderService _orderService
 @inject IJSRuntime _js
 
@@ -15,7 +16,7 @@ else if (orders.Count <= 0)
 else
 {
     <button @onclick="DownloadExcelFile" class="btn btn-primary order-btn">Export in Excel</button>
-    <button class="btn btn-primary order-btn" style="margin-top: 20px;">Export in PDF</button>
+    <button @onclick="DownloadPdfFile" class="btn btn-primary order-btn" style="margin-top: 20px;">Export in PDF</button>
 
     foreach (var order in orders)
     {
@@ -35,14 +36,35 @@ else
 
 <script>
 
-    function saveAsFile(filename, bytesBase64) {
-        var link = document.createElement('a');
-        link.download = filename;
-        link.href = "data:application/octet-stream;base64," + bytesBase64;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    function saveAsFile(filename, bytesBase64){
+        if (navigator.msSaveBlob) {
+            var data = window.atob(bytesBase64);
+            var bytes = new Unit8Array(data.length);
+            for (var i = 0; i < data.length; i++) {
+                bytes[i] = data.charCodeAt(i);
+            }
+            var blob = new Blob([bytes.buffer], { type: "application/octet-stream" });
+            navigator.msSaveBlob(blob, filename);
+        }
+        else {
+            var link = document.createElement("a");
+            link.download = filename;
+            link.href = "data:application/octet-stream;base64, " + bytesBase64;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
     }
+
+    // function saveAsFile(filename, bytesBase64) {
+    //     var link = document.createElement('a');
+    //     link.download = filename;
+    //     link.href = "data:application/octet-stream;base64," + bytesBase64;
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // }
 
 </script>
 
@@ -69,9 +91,17 @@ else
         orders = await _orderService.GetOrders();
     }
 
+    protected async Task DownloadPdfFile()
+    {
+        using (MemoryStream memoryStream = ExportService.GeneratePdf(orders))
+        {
+            await _js.SaveAs("Orders.pdf", memoryStream.ToArray());
+        }
+    }
+
     private async Task DownloadExcelFile()
     {
-        var excelBytes = ExcelService.GenerateExcelWorkbook(orders);
+        var excelBytes = ExportService.GenerateExcelWorkbook(orders);
         await _js.InvokeVoidAsync("saveAsFile", $"Orders_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(excelBytes));
     }
 }

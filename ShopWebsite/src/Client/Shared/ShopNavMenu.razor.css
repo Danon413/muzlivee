@@ -40,6 +40,7 @@
 }
 
 .flex-nav {
+    padding-bottom: 20px;
     flex-direction: column;
 }
 
@@ -49,6 +50,7 @@
     }
 
     .flex-nav {
+        padding-bottom: 20px;
         flex-direction: row;
         display: flex;
         justify-content:center;

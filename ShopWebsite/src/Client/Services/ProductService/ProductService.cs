@@ -20,24 +20,25 @@ namespace ShopWebsite.Client.Services.ProductService
 
         public async Task<Product> CreateProduct(Product product)
         {
-            var result = await _http.PostAsJsonAsync("api/product", product);
+            var result = await _http.PostAsJsonAsync("api/product/admin", product);
+            Console.WriteLine(result);
             var newProduct = (await result.Content.ReadFromJsonAsync<ServiceResponse<Product>>()).Data;
             return newProduct;
         }
 
         public async Task DeleteProduct(int productId)
         {
-            await _http.DeleteAsync($"api/product/{productId}");
+            await _http.DeleteAsync($"/api/product/{productId}");
         }
         public async Task<Product> UpdateProduct(Product product)
         {
-            var result = await _http.PutAsJsonAsync($"api/product", product);
+            var result = await _http.PutAsJsonAsync($"api/product/admin", product);
             var content = await result.Content.ReadFromJsonAsync<ServiceResponse<Product>>();
             return content.Data;
         }
         public async Task GetAdminProducts()
         {
-            var result = await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product/admin");
+            var result = await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("/api/product/admin");
             AdminProducts = result.Data;
             CurrentPage = 1;
             PageCount = 0;

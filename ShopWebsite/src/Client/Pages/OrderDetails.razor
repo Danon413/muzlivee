@@ -61,7 +61,7 @@ else
 
     private async Task DownloadExcelFile()
     {
-        var excelBytes = ExcelService.GenerateExcelWorkbook(order);
+        var excelBytes = ExportService.GenerateExcelWorkbook(order);
         await _js.InvokeVoidAsync("saveAsFile", $"Order_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(excelBytes));
     }
 }

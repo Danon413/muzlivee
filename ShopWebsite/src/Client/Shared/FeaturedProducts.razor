@@ -1,37 +1,41 @@
 ﻿@inject IProductService _productService
 @implements IDisposable
 
-<center><h2>Top Products of Today</h2></center>
-<p style="text-align: center">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-@if (_productService.Products == null || _productService.Products.Count == 0)
-{
-    <span>@_productService.Message</span>
-}
-else
-{
-    <div class="container" style="padding: 15px !important; margin-bottom: 40px !important">
-       @foreach (var product in _productService.Products)
-       {
-            @if(product.Featured)
+<div style="background-color: #fff; color: #000; padding: 20px;">
+    <center><h2 style="color: #000;">Top Products of Today</h2></center>
+    <p style="text-align: center; color: #000;">
+        Discover the finest selection of music products available today. From the latest instruments to must-have accessories, our top picks will inspire your musical journey. Explore our featured products and find the perfect addition to your collection.
+    </p>
+    @if (_productService.Products == null || _productService.Products.Count == 0)
+    {
+        <span>@_productService.Message</span>
+    }
+    else
+    {
+        <div class="container">
+            @foreach (var product in _productService.Products)
             {
-                <div class="featured-product">
-                    <div>
-                        <a class="product" href="product/@product.Id">
-                            <img src="@product.ImageUrl" />
-                        </a>
+                @if (product.Featured)
+                {
+                    <div class="featured-product">
+                        <div>
+                            <a class="product" href="product/@product.Id">
+                                <img src="@product.ImageUrl" alt="@product.Title" />
+                            </a>
+                        </div>
+                        <h4><a class="product" href="product/@product.Id" style="color: #000;">@product.Title</a></h4>
+                        @if (product.Variants != null && product.Variants.Count > 0)
+                        {
+                            <h5 class="price">
+                                €@product.Variants[0].Price
+                            </h5>
+                        }
                     </div>
-                    <h4><a class="product" href="product/@product.Id">@product.Title</a></h4>
-                    @if(product.Variants != null && product.Variants.Count > 0)
-                    {
-                        <h5 class="price">
-                            €@product.Variants[0].Price
-                        </h5>
-                    }
-                </div>
+                }
             }
-        }
-    </div>
-}
+        </div>
+    }
+</div>
 
 @code {
     protected override void OnInitialized()

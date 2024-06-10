@@ -71,12 +71,14 @@ namespace ShopWebsite.Server.Controllers
             var result = await _productService.CreateProduct(product);
             return Ok(result);
         }
+
         [HttpPut("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<Product>>> UpdateProduct(Product product)
         {
             var result = await _productService.UpdateProduct(product);
             return Ok(result);
         }
+
         [HttpDelete("admin/{productId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int productId)
         {

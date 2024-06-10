@@ -1,0 +1,105 @@
+﻿/* Hero Section */
+.hero-section {
+    background-color: black;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .hero-content .lead {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+    }
+
+    .hero-content a {
+        font-size: 1.25rem;
+        padding: 15px 30px;
+        border-radius: 30px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+        .hero-content a:hover {
+            background-color: #0056b3;
+        }
+
+/* About Us Section */
+.about-section {
+    background-color: white;
+    padding: 100px 0;
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+    .about-content h2 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .about-content p {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+
+.why-us-section .card {
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    color: black;
+    text-align: center;
+}
+
+.why-us-section .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 15px;
+}
+
+.why-us-section .card-text {
+    font-size: 1.25rem;
+    color: black;
+}
+
+
+.testimonials-section .testimonial {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    height: 100%;
+}
+
+.testimonials-section .testimonial-content p {
+    font-size: 1.25rem;
+}
+
+.testimonials-section .testimonial-author p {
+    font-style: italic;
+    font-size: 1rem;
+    margin-top: 20px;
+}

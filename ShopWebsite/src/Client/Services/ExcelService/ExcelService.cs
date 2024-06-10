@@ -1,9 +1,55 @@
 ﻿using OfficeOpenXml;
+using Syncfusion.Pdf;
+using Syncfusion.Pdf.Graphics;
+using Syncfusion.Pdf.Grid;
 
 namespace ShopWebsite.Client.Services.ExcelService
 {
-    public static class ExcelService
+    public class ExportService
     {
+        public static MemoryStream GeneratePdf(List<OrderOverviewResponse> orderOverviews)
+        {
+            if (orderOverviews == null)
+                throw new ArgumentNullException("Data can't be null.");
+
+            using (PdfDocument pdfDocument = new PdfDocument())
+            {
+                int paragraphAfterSpacing = 8;
+                int cellMargin = 8;
+
+                PdfPage page = pdfDocument.Pages.Add();
+
+                PdfStandardFont font = new PdfStandardFont(PdfFontFamily.TimesRoman, 16);
+
+                PdfTextElement title = new PdfTextElement("Orders", font, PdfBrushes.Black);
+                PdfLayoutResult result = title.Draw(page, new Syncfusion.Drawing.PointF(0, 0));
+
+                PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
+                PdfLayoutFormat format = new PdfLayoutFormat();
+                format.Layout = PdfLayoutType.Paginate;
+
+                PdfGrid pdfGrid = new PdfGrid();
+                pdfGrid.Style.CellPadding.Left = cellMargin;
+                pdfGrid.Style.CellPadding.Right = cellMargin;
+
+                pdfGrid.ApplyBuiltinStyle(PdfGridBuiltinStyle.GridTable4Accent1);
+
+                pdfGrid.DataSource = orderOverviews.ToList();
+
+                pdfGrid.Style.Font = contentFont;
+
+                pdfGrid.Draw(page, new Syncfusion.Drawing.PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    pdfDocument.Save(stream);
+                    pdfDocument.Close(true);
+                    return stream;
+                }
+
+            }
+        }
+
         public static byte[] GenerateExcelWorkbook(List<OrderOverviewResponse> orders)
         {
             var stream = new MemoryStream();

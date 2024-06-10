@@ -3,19 +3,16 @@
 @page "/{categoryUrl}"
 @inject IProductService _productService
 
-
 <PageTitle>Shop Website</PageTitle>
 
-@if(searchString == null && categoryUrl == null)
+@if (searchString == null && categoryUrl == null)
 {
-    <FeaturedProducts />
     <Component1></Component1>
-    <Component2></Component2>
-    <Component3></Component3>
+    <FeaturedProducts />
 }
 else
 {
-    <ProductList />   
+    <ProductList />
 }
 
 @code {
@@ -30,7 +27,7 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        if(searchString != null)
+        if (searchString != null)
         {
             await _productService.SearchProducts(searchString, page);
         }
