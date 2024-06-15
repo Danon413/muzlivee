@@ -15,8 +15,6 @@ else if (orders.Count <= 0)
 }
 else
 {
-    <button @onclick="DownloadExcelFile" class="btn btn-primary order-btn">Export in Excel</button>
-    <button @onclick="DownloadPdfFile" class="btn btn-primary order-btn" style="margin-top: 20px;">Export in PDF</button>
 
     foreach (var order in orders)
     {
@@ -57,15 +55,6 @@ else
         
     }
 
-    // function saveAsFile(filename, bytesBase64) {
-    //     var link = document.createElement('a');
-    //     link.download = filename;
-    //     link.href = "data:application/octet-stream;base64," + bytesBase64;
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // }
-
 </script>
 
 @code {
@@ -91,13 +80,13 @@ else
         orders = await _orderService.GetOrders();
     }
 
-    protected async Task DownloadPdfFile()
-    {
-        using (MemoryStream memoryStream = ExportService.GeneratePdf(orders))
-        {
-            await _js.SaveAs("Orders.pdf", memoryStream.ToArray());
-        }
-    }
+    // protected async Task DownloadPdfFile()
+    // {
+    //     using (MemoryStream memoryStream = ExportService.GeneratePdf(orders))
+    //     {
+    //         await _js.SaveAs("Orders.pdf", memoryStream.ToArray());
+    //     }
+    // }
 
     private async Task DownloadExcelFile()
     {

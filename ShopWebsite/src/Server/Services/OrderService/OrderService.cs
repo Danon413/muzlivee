@@ -36,8 +36,13 @@ namespace ShopWebsite.Server.Services.OrderService
                 return response;
             }
 
+            var fullName = await _authService.GetUserFullNameAsync(order.UserId);
+            var address = await _authService.GetUserAddress(order.UserId);
+
             var orderDetailsResponse = new OrderDetailsResponse
             {
+                FullName = fullName,
+                Address = address,
                 OrderDate = order.OrderDate,
                 TotalPrice = order.TotalPrice,
                 Products = new List<OrderDetailsProductResponse>()

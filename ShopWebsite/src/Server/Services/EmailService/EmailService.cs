@@ -34,7 +34,7 @@ namespace ShopWebsite.Server.Services.EmailService
                                   </div>
                               </td>
                               <td class=""line-item product-price-column"" style=""width: 100px;text-align: right;vertical-align: top;"">
-                                <div class=""sub price"" style=""font-size: 13px;margin-bottom: 3px;margin-top: 18px;"">
+                                <div style=""font-size: 13px;margin-bottom: 3px;margin-top: 18px;"">
                             €{item.TotalPrice}    </div>
                                   <div class=""ships-by-message"" style=""font-size: 13px;padding-top: 4px;"">
                                     <strong style=""font-weight: 400;"">
@@ -49,6 +49,9 @@ namespace ShopWebsite.Server.Services.EmailService
 
             return textBody;
         }
+
+        
+
         public async Task SendEmailAsync(string emailTo, List<OrderItem> orderItems, Order order)
         {
             var textBody = GetHtmlForEmailNotification(orderItems);

@@ -15,7 +15,7 @@ using ShopWebsite.Client.Utils.ServiceRegistration;
 using Blazored.LocalStorage;
 using ShopWebsite.Client;
 
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVJwWmFZfVpgdVRMYF1bR3dPMyBoS35RckVlWXZfcXRURWFZWEN3");
+//Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXlfdXVWQ2ZcUkZzWUU=");
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");

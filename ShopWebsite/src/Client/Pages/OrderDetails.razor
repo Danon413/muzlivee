@@ -1,4 +1,6 @@
 ﻿@page "/orders/{orderId:int}"
+@using ShopWebsite.Client.Services.EmailService
+@using ShopWebsite.Client.Utils
 @inject IOrderService _orderService
 @inject IJSRuntime _js
 
@@ -11,7 +13,7 @@ else
 {
     <h3>Order from @order.OrderDate</h3>
 
-    <button @onclick="DownloadExcelFile" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Export in Excel</button>
+    <button @onclick="DownloadPdfFile" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Export in PDF</button>
 
     <div>
         @foreach (var product in order.Products)
@@ -34,15 +36,59 @@ else
     </div>
 }
 
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.3/dist/purify.min.js"></script>
 <script>
 
     function saveAsFile(filename, bytesBase64) {
-        var link = document.createElement('a');
-        link.download = filename;
-        link.href = "data:application/octet-stream;base64," + bytesBase64;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (navigator.msSaveBlob) {
+            var data = window.atob(bytesBase64);
+            var bytes = new Unit8Array(data.length);
+            for (var i = 0; i < data.length; i++) {
+                bytes[i] = data.charCodeAt(i);
+            }
+            var blob = new Blob([bytes.buffer], { type: "application/octet-stream" });
+            navigator.msSaveBlob(blob, filename);
+        }
+        else {
+            var link = document.createElement("a");
+            link.download = filename;
+            link.href = "data:application/octet-stream;base64, " + bytesBase64;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    }
+
+    function generateAndDownloadPdf(htmlOrElement, filename) {
+        const doc = new jspdf.jsPDF({
+            orientation: 'p',
+            unit: 'pt',
+            format: 'a4'
+        });
+
+        return new Promise((resolve, reject) => {
+            doc.html(htmlOrElement, {
+                callback: doc => {
+                    doc.save(filename);
+                    resolve();
+                }
+            });
+        });
+    }
+
+    function generatePdf(htmlOrElement) {
+        const doc = new jspdf.jsPDF();
+        return new Promise((resolve, reject) => {
+            doc.html(htmlOrElement, {
+                callback: doc => {
+                    const output = doc.output("arraybuffer");
+                    resolve(new Uint8Array(output));
+                }
+            });
+        });
     }
 
 </script>
@@ -58,6 +104,21 @@ else
     {
         order = await _orderService.GetOrderDetails(OrderId);
     }
+
+    async Task DownloadPdfFile()
+    {
+        var text = EmailService.GetHtmlForPdfExport(order);
+
+        await _js.InvokeVoidAsync("generateAndDownloadPdf", text, $"Order_{order.OrderDate.ToShortDateString()}.pdf");
+
+    }
+    // protected async Task DownloadPdfFile()
+    // {
+    //     using (MemoryStream memoryStream = ExportService.GeneratePdf(order))
+    //     {
+    //         await _js.SaveAs($"Order_{order.OrderDate}.pdf", memoryStream.ToArray());
+    //     }
+    // }
 
     private async Task DownloadExcelFile()
     {
