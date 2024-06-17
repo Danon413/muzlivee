@@ -96,7 +96,7 @@ else
             <label for="visible" class="form-check-label">Visible</label>
         </div>
         <hr />
-        <button type="submit" class="btn btn-primary float-end">@btnText</button>
+        <button type="submit" @onclick="RemoveBool" class="btn btn-primary float-end">@btnText</button>
         <ValidationSummary />
     </EditForm>
 }
@@ -111,6 +111,8 @@ else
     bool loading = true;
     string btnText = "";
     string msg = "Loading...";
+    bool isVariant = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,6 +142,11 @@ else
         loading = false;
     }
 
+    void RemoveBool()
+    {
+        isVariant = false;
+    }
+
     void RemoveVariant(int productTypeId)
     {
         var variant = product.Variants.Find(v => v.ProductTypeId == productTypeId);
@@ -162,12 +169,20 @@ else
         product.Variants.Add(new ProductVariant
         {
             IsNew = true,
-            ProductId = product.Id
+            ProductId = product.Id,
+            ProductTypeId = 1
         });
+
+        isVariant = true;
     }
 
     async void AddOrUpdateProduct()
     {
+        if (isVariant)
+        {
+            return;
+        }
+
         if (product.IsNew)
         {
             var result = await _productService.CreateProduct(product);
