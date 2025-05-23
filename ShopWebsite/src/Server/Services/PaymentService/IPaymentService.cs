@@ -4,7 +4,8 @@ namespace ShopWebsite.Server.Services.PaymentService
 {
     public interface IPaymentService
     {
-        Task<Session> CreateCheckoutSession();
+        // Новый вариант — принимает дату бронирования
+        Task<Session> CreateCheckoutSession(DateTime? bookingDate);
         Task<ServiceResponse<bool>> FulfillOrder(HttpRequest request);
     }
 }
