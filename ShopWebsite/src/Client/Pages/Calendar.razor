@@ -1,32 +1,32 @@
-@page "/calendar"
+@using Microsoft.AspNetCore.Components
 
-<h3>Calendar</h3>
-
+<h4>Выберите дату бронирования</h4>
+@if (SelectedDate != null)
+{
+    <p>Выбрана дата: @SelectedDate.Value.ToShortDateString()</p>
+}
 <table>
-    <thead>
-        <tr>
-            <th>Пн</th>
-            <th>Вт</th>
-            <th>Ср</th>
-            <th>Чт</th>
-            <th>Пт</th>
-            <th>Сб</th>
-            <th>Вс</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int week = 0; week < 5; week++)
+    <tr>
+        @for (int i = 0; i < 14; i++)
         {
-            <tr>
-                @for (int day = 1; day <= 7; day++)
-                {
-                    <td>@(week * 7 + day)</td>
-                }
-            </tr>
+            var date = DateTime.Today.AddDays(i);
+            <td>
+                <button @onclick="@(() => SelectDate(date))"
+                        style="margin: 2px;@(SelectedDate == date ? "background: #9cf;" : "")">
+                    @date.ToShortDateString()
+                </button>
+            </td>
         }
-    </tbody>
+    </tr>
 </table>
 
 @code {
-    // Здесь будет логика календаря, если она понадобится
+    [Parameter] public DateTime? SelectedDate { get; set; }
+    [Parameter] public EventCallback<DateTime> OnDateSelected { get; set; }
+
+    void SelectDate(DateTime date)
+    {
+        SelectedDate = date;
+        OnDateSelected.InvokeAsync(date);
+    }
 }
