@@ -1,7 +1,33 @@
 @page "/calendar"
 
+@page "/calendar"
+
 <h3>Calendar</h3>
-<p>Здесь будет ваш календарь!</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Пн</th>
+            <th>Вт</th>
+            <th>Ср</th>
+            <th>Чт</th>
+            <th>Пт</th>
+            <th>Сб</th>
+            <th>Вс</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int week = 0; week < 5; week++)
+        {
+            <tr>
+                @for (int day = 1; day <= 7; day++)
+                {
+                    <td>@(week * 7 + day)</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
     // Здесь будет логика календаря, если она понадобится
