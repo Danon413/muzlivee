@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json; // Не забудь этот using!
 
 namespace ShopWebsite.Client.Services.OrderService
 {
@@ -25,6 +26,27 @@ namespace ShopWebsite.Client.Services.OrderService
             var result = await _http.GetFromJsonAsync<ServiceResponse<List<OrderOverviewResponse>>>("api/order");
             return result.Data;
         }
+
+        // Новый метод для передачи даты бронирования
+        public async Task<string> PlaceOrder(DateTime? bookingDate)
+        {
+            if (await IsUserAuthenticated())
+            {
+                var request = new OrderBookingRequest
+                {
+                    BookingDate = bookingDate
+                };
+                var result = await _http.PostAsJsonAsync("api/payment/checkout", request);
+                var url = await result.Content.ReadAsStringAsync();
+                return url;
+            }
+            else
+            {
+                return "login";
+            }
+        }
+
+        // Старый метод можно оставить для совместимости
         public async Task<string> PlaceOrder()
         {
             if (await IsUserAuthenticated())
@@ -38,9 +60,16 @@ namespace ShopWebsite.Client.Services.OrderService
                 return "login";
             }
         }
+
         private async Task<bool> IsUserAuthenticated()
         {
             return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
+    }
+
+    // Класс для тела запроса с датой бронирования
+    public class OrderBookingRequest
+    {
+        public DateTime? BookingDate { get; set; }
     }
 }
