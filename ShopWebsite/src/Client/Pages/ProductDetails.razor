@@ -79,14 +79,27 @@ else
     }
 
     private async Task AddToCart()
+{
+    if (product == null || product.Variants == null || !product.Variants.Any())
     {
-        var productVariant = GetSelectedVariant();
-        var cartItem = new CartItem
-        {
-            ProductId = productVariant.ProductId,
-            ProductTypeId = productVariant.ProductTypeId
-        };
-
-        await _cartService.AddToCart(cartItem);
+        message = "Ошибка: Товар или его варианты не загружены.";
+        StateHasChanged();
+        return;
     }
+
+    var productVariant = GetSelectedVariant();
+    if (productVariant == null)
+    {
+        message = "Выберите тип продукта";
+        StateHasChanged();
+        return;
+    }
+
+    var cartItem = new CartItem
+    {
+        ProductId = productVariant.ProductId,
+        ProductTypeId = productVariant.ProductTypeId
+    };
+
+    await _cartService.AddToCart(cartItem);
 }
