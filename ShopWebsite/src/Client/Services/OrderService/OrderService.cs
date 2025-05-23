@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json; // Не забудь этот using!
+using System.Net.Http.Json;
 
 namespace ShopWebsite.Client.Services.OrderService
 {
@@ -46,7 +46,7 @@ namespace ShopWebsite.Client.Services.OrderService
             }
         }
 
-        // Старый метод можно оставить для совместимости
+        // Старый вариант для совместимости (можно удалить, если не нужен)
         public async Task<string> PlaceOrder()
         {
             if (await IsUserAuthenticated())
