@@ -18,7 +18,9 @@ namespace ShopWebsite.Server.Services.PaymentService
             _authService = authService;
             _orderService = orderService;
         }
-        public async Task<Session> CreateCheckoutSession()
+
+        // Новый метод, с параметром bookingDate — теперь реализует интерфейс правильно!
+        public async Task<Session> CreateCheckoutSession(DateTime? bookingDate)
         {
             var products = (await _cartService.GetDbCartProducts()).Data;
             var lineItems = new List<SessionLineItemOptions>();
@@ -84,6 +86,9 @@ namespace ShopWebsite.Server.Services.PaymentService
                 SuccessUrl = "https://localhost:7160/order-success",
                 CancelUrl = "https://localhost:7160/cart"
             };
+
+            // bookingDate можно сохранить в заказе или использовать по сценарию
+            // Например: await _orderService.SetBookingDateForUser(_authService.GetUserId(), bookingDate);
 
             var service = new SessionService();
             Session session = service.Create(options);
