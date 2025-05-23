@@ -16,6 +16,9 @@
                 Home
             </NavLink>
         </div>
+            <NavLink href="calendar" class="nav-link" Match="NavLinkMatch.All">
+            <span class="oi oi-calendar" aria-hidden="true"></span> Calendar
+        </NavLink>
         @foreach (var category in _categoryService.Categories)
         {
             <div class="nav-item px-3">
