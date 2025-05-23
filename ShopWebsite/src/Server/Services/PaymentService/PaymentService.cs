@@ -19,7 +19,6 @@ namespace ShopWebsite.Server.Services.PaymentService
             _orderService = orderService;
         }
 
-        // Новый метод, с параметром bookingDate — теперь реализует интерфейс правильно!
         public async Task<Session> CreateCheckoutSession(DateTime? bookingDate)
         {
             var products = (await _cartService.GetDbCartProducts()).Data;
@@ -42,7 +41,7 @@ namespace ShopWebsite.Server.Services.PaymentService
             var options = new SessionCreateOptions
             {
                 CustomerEmail = _authService.GetUserEmail(),
-                
+                Locale = "en", // ← эта строка заставит Stripe Checkout быть на английском
                 ShippingAddressCollection =
                 new SessionShippingAddressCollectionOptions
                 {
@@ -86,9 +85,6 @@ namespace ShopWebsite.Server.Services.PaymentService
                 SuccessUrl = "https://localhost:7160/order-success",
                 CancelUrl = "https://localhost:7160/cart"
             };
-
-            // bookingDate можно сохранить в заказе или использовать по сценарию
-            // Например: await _orderService.SetBookingDateForUser(_authService.GetUserId(), bookingDate);
 
             var service = new SessionService();
             Session session = service.Create(options);
