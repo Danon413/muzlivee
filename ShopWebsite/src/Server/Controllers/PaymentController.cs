@@ -15,9 +15,9 @@ namespace ShopWebsite.Server.Controllers
         }
 
         [HttpPost("checkout"), Authorize]
-        public async Task<ActionResult<string>> CreateCheckoutSession()
+        public async Task<ActionResult<string>> CreateCheckoutSession([FromBody] OrderBookingRequest request)
         {
-            var session = await _paymentService.CreateCheckoutSession();
+            var session = await _paymentService.CreateCheckoutSession(request.BookingDate);
             return Ok(session.Url);
         }
 
@@ -30,5 +30,11 @@ namespace ShopWebsite.Server.Controllers
 
             return Ok(response);
         }
+    }
+
+    // Добавь этот класс, если его нет в проекте:
+    public class OrderBookingRequest
+    {
+        public DateTime? BookingDate { get; set; }
     }
 }
