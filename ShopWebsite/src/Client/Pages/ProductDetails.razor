@@ -38,8 +38,8 @@ else
                     €@GetSelectedVariant().Price
                 </h4>
             }
-            <button class="btn btn-primary" @onclick="AddToCart">
-                <i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart
+            <button class="btn btn-primary" @onclick="AddToCart" disabled="@(product == null)">
+            <i class="oi oi-cart"></i> Add to Cart
             </button>
         </div>
     </div>
