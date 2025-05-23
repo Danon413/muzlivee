@@ -99,7 +99,6 @@ else
 
     private async Task PlaceOrder()
     {
-        // Теперь BookingDate реально уходит в заказ!
         string url = await _orderService.PlaceOrder(BookingDate);
         _navigationManager.NavigateTo(url);
     }
