@@ -1,4 +1,5 @@
-﻿@page "/cart"
+@page "/cart"
+@using ShopWebsite.Client.Shared
 @inject ICartService _cartService
 @inject IOrderService _orderService
 @inject IAuthService _authService
@@ -47,6 +48,10 @@ else
             <AddressForm />
         </div>
     }
+    @if (CartContainsService)
+    {
+        <Calendar SelectedDate="@BookingDate" OnDateSelected="@OnBookingDateSelected" />
+    }
     <button @onclick="PlaceOrder" class="btn btn-success float-end mt-1">Checkout</button>
 }
 
@@ -54,6 +59,7 @@ else
     List<CartProductResponse> cartProducts = null;
     string message = "Loading cart...";
     bool isAuthenticated = false;
+    DateTime? BookingDate;
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,8 +90,19 @@ else
         await _cartService.UpdateQuantity(product);
     }
 
+    void OnBookingDateSelected(DateTime date)
+    {
+        BookingDate = date;
+    }
+
+    bool CartContainsService => cartProducts != null && cartProducts.Any(i => i.ProductType == "Service");
+
     private async Task PlaceOrder()
     {
+        // Здесь нужно доработать, чтобы BookingDate ушла в заказ!
+        // Например, если у _orderService.PlaceOrder есть параметр:
+        // string url = await _orderService.PlaceOrder(BookingDate);
+        // Сейчас оставляем как есть, если сервис не принимает дату.
         string url = await _orderService.PlaceOrder();
         _navigationManager.NavigateTo(url);
     }
